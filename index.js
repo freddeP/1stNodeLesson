@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 
 // använda sig av publika filer css, js, bilder html etc
 app.use(express.static('public'));
+//app.use('/client', express.static(__dirname + 'client'));
 
 
 app.get("/",(req,res)=>{
@@ -32,60 +33,53 @@ app.get("/about",(req,res)=>{
 
 app.get("/info",(req,res)=>{
    
-    // Läsa fil 
-    fs.readFile("public/info.json",(err,data)=>{
-
-        if(err) throw err;
-        
-        else {
-
-            // Gör om datan från filen till sträng
-            let myData = data.toString();
-            // parsar strängen till ett objekt
-            myData =JSON.parse(myData);
-
-            // Gör om objektet till en array
-            let myArrData = Object.keys(myData).map( (index)=>{
-                return myData[index];
-            });
-            
-            // Ny data i objektform
-            myNewData = {};
-            myNewData.id = '1241243124124';
-            myNewData.info = 'Now We have a mf array';
-
-            // Uppdatera array med ny data
-            myArrData.push(myNewData);
-
-            console.log(myArrData);
-            
-            // skriver till fil
-            fs.writeFile("public/info.json",JSON.stringify(myArrData), (err)=>{
-                if(err) throw err;
-            });
-
-
-        }
-
-    });
-  
-
 });
-
 
 app.post("/info", (req, res)=>{
 
-    console.log(JSON.stringify(req.body));
-
+    console.log((req.body));
+    let data = req.body;
+    // skicka data till funktion som sparar till fil.
+    updateInfo(data);
+    res.send("data: " + JSON.stringify(req.body));
 
 });
-
-
-
 
 
 app.listen(3000,()=>{
     console.log("express listen on port 3000");
-})
+});
 
+function updateInfo(input){
 
+        // Läsa fil 
+        fs.readFile("public/info.json",(err,data)=>{
+
+            if(err) throw err;
+            else {
+                // Gör om datan från filen till sträng
+                let myData = data.toString();
+                // parsar strängen till ett objekt
+                myData =JSON.parse(myData);
+    
+                // Gör om objektet till en array
+                let myArrData = Object.keys(myData).map( (index)=>{
+                    return myData[index];
+                });
+                
+                // Skapar id för vårt input.
+                input.id = Date.now();
+                
+                // Uppdatera array med ny data
+                myArrData.push(input);
+
+                // skriver till fil
+                fs.writeFile("public/info.json",JSON.stringify(myArrData), (err)=>{
+                    if(err) throw err;
+                });
+
+            }
+    
+        });
+
+}
