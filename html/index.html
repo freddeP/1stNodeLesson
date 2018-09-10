@@ -10,7 +10,34 @@
     
     <h1>Hello node developers</h1>
     <a href = "/">homepage</a>
-    <a href = "/about">about</a>
+    <a href = "/about">about</a> 
+
+<textarea id="text" cols="30" rows="10" placeholder="text to save"></textarea>
+<button id="saveButton">save text</button>
+
+<script>
+    const myButton = document.getElementById("saveButton");
+    myButton.addEventListener("click", sendTextToServer);
+
+    function sendTextToServer(){
+        // text som skall skickas till servern
+        const text = document.getElementById('text').value;
+        console.log(text);
+
+        const jsonText = '{"id": "asödfkl", "info": "'+text+'" }';
+
+        const req = new XMLHttpRequest();
+
+        req.open("POST", "http://localhost:3000/info", true);
+        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        req.send(jsonText);
+
+    }
+
+
+
+</script>
+
 
 </body>
 </html>
